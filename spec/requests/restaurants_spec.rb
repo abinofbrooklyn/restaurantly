@@ -1,16 +1,15 @@
-context "POST /restaurants" do
+context "PUT /restaurants/:id" do
   context "complete params" do
-    restaurant = {restaurant: {name: "mcrails"}}
-    subject{ post "/restaurants", restaurant }
-    it "redirects to show" do
-      expect(subject).to redirect_to restaurant_path(id:1)
+    before do
+      @restaurant = FactoryGirl.create :restaurant
+      @restaurant_info = {id: @restaurant.id, restaurant: {name: "mcrails"}}
     end
+    subject{ put "/restaurants/#{@restaurant.id}", @restaurant_info }
+    it { expect(subject).to redirect_to restaurant_path(id:1) }
   end
 
   context "incomplete params" do
-    subject{ post "/restaurants", {}}
-    it "redirects to new" do
-      expect(subject).to redirect_to(new_restaurant_path)
-    end
+    subject{ put "/restaurants/1", {id: 1} }
+    it { expect(subject).to redirect_to root_path }
   end
 end
